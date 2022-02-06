@@ -127,9 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.xlsx
-.csv
-.CSV
-.xls
+*.xlsx
+*.csv
+*.CSV
+*.xls
 
 
