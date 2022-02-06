@@ -130,5 +130,7 @@ dmypy.json
 .Data/
 .xlsx
 .csv
+.CSV
+.xls
 
 
