@@ -62,3 +62,29 @@ plt.ylabel('Monthly Average return')
 plt.legend('High - Low')
 plt.show()
 
+mktv = df['Mktv'] / 100
+
+sorted_mktv = mktv.sort_values()
+T = sorted_mktv.__len__()
+ecdf = pd.DataFrame([(sorted_mktv <= rt).sum() / T for rt in sorted_mktv.to_list() ])
+
+from scipy.stats import norm
+
+tcdf = pd.DataFrame(norm.cdf(sorted_mktv, loc=mktv.mean(), scale=mktv.std()))
+
+ks = (ecdf - tcdf).abs().max()
+
+plt.figure()
+plt.plot(tcdf)
+plt.plot(ecdf)
+
+abs_diff = (ecdf - tcdf).abs()
+pos = np.where(abs_diff == ks)
+
+critical_value = pd.DataFrame([0.805/np.sqrt(T), 0.886/np.sqrt(T), 1.031/np.sqrt(T)],
+index=['10%', '5%', '1%'])
+
+if any( ks > critical_value ):
+    print( f'we reject H_0 and conclude about non normality at {critical_value[ks > critical_value].index.values}' )
+else:
+    print( f'we can reject H_0 at {critical_value[ks > critical_value].index.values} and conclude about nothing' )
